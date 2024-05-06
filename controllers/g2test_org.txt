@@ -1,0 +1,36 @@
+'use strict';
+
+const UserModel = require('../models/UserModel');
+const bcrypt = require('bcrypt');
+
+module.exports = async (req,res)=>{
+  try {
+  // protecting access of page even with direct URL i.e if user adds the URL directly they will still not be able to render this page due to userType
+    if (req.session.userId && req.session.userType === "Driver") { //if user id exists then this pages can be accessed which happens when we have the correct login ID
+      const user = await UserModel.findById(req.session.userId);
+      if (!user) {
+        return res.redirect("/");
+      }
+
+      bcrypt.compare("default", user.licenseNumber, (error, result) => {
+        if (error) {
+          console.error("Error decrypting license number:", error);
+          return res.status(500).send("Error decrypting license number");
+        }
+
+        // console.log("Prince g2 test:" + result.toString());
+
+        // Render the G2 page
+        return res.render("g2test", { user, result });
+      });
+
+    } 
+    else 
+    return res.redirect("/");
+  }
+  catch(err)
+  {
+    console.error("Error fetching user data:", err);
+    res.status(500).send("Error fetching user data");
+  }
+};

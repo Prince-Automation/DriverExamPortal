@@ -1,0 +1,188 @@
+this verison is for backup of gtest.ejs and gtest.js
+gtest.ejs
+
+
+<!DOCTYPE html>
+<html lang="en">
+    <%- include('layouts/header'); -%>
+    <body>
+        <%- include('layouts/navbar'); -%>
+        <!-- Page Header-->
+        <header class="masthead">
+            <div class="container position-relative px-4 px-lg-5">
+                <div class="row gx-4 gx-lg-5 justify-content-center">
+                    <div class="col-md-10 col-lg-8 col-xl-7">
+                        <div class="page-heading">
+                            <h1>G Test Page</h1>
+                            <span class="subheading">This is what I do.</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+        <!-- Main Content-->
+        <div class="gpage_container">
+            <h2 class="gpage_page-title">G Page</h2>
+            <!-- <form id="gForm" class="booking-form" action="/gtestform" method="GET">
+                <label for="licenseNumber">Enter License Number:</label>
+                <input type="text" id="licenseNumber" name="licenseNumber" class="gpage_form-input" required>
+        
+                
+                <button type="submit" id="submitBtn" class="gpage_submit-button">Submit</button>
+            </form> -->
+            <!-- Display Data Section (hidden by default) -->
+            <div id="dataDisplay" class="gpage_data-display">
+                <!-- Displayed data will go here (for demonstration purposes) -->
+                <p id="displayedData" class="gpage_displayed-data">Data will be displayed here.</p>
+        
+                <!-- <% if (typeof message !=='undefined' ) { %>
+                    <p>
+                        <%= message %>
+                    </p>
+                    <% } %> -->
+                        <% if (typeof usermodel !=='undefined' ) { %>
+                            <table class="gpage_data-table">
+                                <tbody>
+                                    <tr>
+                                        <th>First Name</th>
+                                        <td>
+                                            <%= usermodel.firstName %>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>Last Name</th>
+                                        <td>
+                                            <%= usermodel.lastName %>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>License Number</th>
+                                        <td>
+                                            <%= usermodel.licenseNumber %>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>Age</th>
+                                        <td>
+                                            <%= usermodel.age %>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th colspan="2">Car Information</th>
+                                    </tr>
+                                    <tr>
+                                        <th>Make</th>
+                                        <td>
+                                            <%= usermodel.car_details.make %>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>Model</th>
+                                        <td>
+                                            <%= usermodel.car_details.model %>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>Year</th>
+                                        <td>
+                                            <%= usermodel.car_details.year %>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>Plate Number</th>
+                                        <td>
+                                            <%= usermodel.car_details.plateNumber %>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        <!-- </br>
+                            <h3>Car Information</h3>
+                            <form id="gCarForm" class="booking-form" action="/gtest/carDetails" method="POST">
+                                <input type="hidden" name="licenseNumber" value="<%= usermodel.licenseNumber %>">
+                                <label for="make">Make:</label>
+                                <input type="text" id="make" name="make" value="<%= usermodel.car_details.make %>" class="form-input"
+                                    required>
+
+                                <label for="model">Model:</label>
+                                <input type="text" id="model" name="model"
+                                    value="<%= usermodel.car_details.model %>" class="form-input" required>
+
+                                <label for="year">Year:</label>
+                                <input type="number" name="year" value="<%= usermodel.car_details.year %>" class="form-input"
+                                    required>
+
+                                <label for="plateNumber">Plate Number:</label>
+                                <input type="text" id="plateNumber" name="plateNumber"
+                                    value="<%= usermodel.car_details.plateNumber %>" class="form-input" required>
+
+                                <button type="submit">Update</button>
+                            </form> -->
+
+                        <% } %>
+            </div>
+        </div>
+
+        <%- include('layouts/footer'); -%>
+        
+        <%- include('layouts/scripts'); -%>
+    </body>
+</html>
+
+
+
+
+gtest.js
+
+'use strict';
+
+
+const UserModel = require('../models/UserModel');
+const bcrypt = require('bcrypt');
+
+module.exports = async (req,res)=>{
+    try {
+        // protecting access of page even with direct URL i.e if user adds the URL directly they will still not be able to render this page due to userType
+          if (req.session.userId && req.session.userType === "Driver") { //if user id exists then this pages can be accessed which happens when we have the correct login ID
+            const usermodel = await UserModel.findById(req.session.userId);
+            if (!usermodel) {
+              return res.redirect("/");
+            }
+      
+            bcrypt.compare("default", usermodel.licenseNumber, (error, result) => {
+              if (error) {
+                console.error("Error decrypting license number:", error);
+                return res.status(500).send("Error decrypting license number");
+              }
+      
+              console.log("Prince g test:" + result.toString());
+              
+              if (result)
+              // Redirecting the G2 page since license number is default and user has not added any data so redirecting to G2 Page
+              return res.redirect("/g2test");
+              else 
+              return res.render('gtest', { usermodel }); // since license number is not default that means there is new data and page will be shown
+            });
+      
+          } 
+          else 
+          return res.redirect("/");
+        }
+        catch(err)
+        {
+          console.error("Error fetching user data:", err);
+          res.status(500).send("Error fetching user data");
+        }
+};
+
+
+
+
+
+
+    // return res.render('gtest');
+    //     }
+    //     else
+    //     res.redirect('/login');
+
+

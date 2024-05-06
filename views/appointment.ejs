@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<%- include('layouts/header'); -%>
+
+<body>
+    <%- include('layouts/navbar'); -%>
+    <!-- Page Header-->
+    <header class="masthead" style="background-image: url('assets/img/contact-bg.jpg')">
+        <div class="container position-relative px-4 px-lg-5">
+            <div class="row gx-4 gx-lg-5 justify-content-center">
+                <div class="col-md-10 col-lg-8 col-xl-7">
+                    <div class="page-heading">
+                        <h1>APPOINTMENT PAGE</h1>
+                        <span class="subheading">Select an appointment time slot:</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content-->
+    <form id="appointmentForm" action="/appointmentForm/store" method="POST">
+        <label for="date">Select a date:</label>
+        <input type="date" id="date" name="date" required>
+        <input type="hidden" id="time" name="time">
+        <div id="timeSlotsContainer">
+            <% for (let i = 9; i <= 14; i++) { %>
+            <% for (let j = 0; j < 2; j++) { %>
+            <% let timeSlot = i + ":" + (j === 0 ? "00" : "30"); %>
+            <% if (timeSlot === "14:30") break; %>
+            <button class="time-slot btnstyle" id="<%= timeSlot %>" data-time="<%= timeSlot %>"><%= timeSlot %></button>
+            <% } %>
+            <% } %>
+        </div>
+        <button type="submit" class="submit-button" id="formbutton">Add Slot</button>
+
+        <% if (error) { %>
+            <div class="alert alert-danger" role="alert"><%= error %></div>
+            <% if (existingTimeSlots && existingTimeSlots.length > 0) { %>
+                <div class="alert alert-danger">
+                    <p>The following time slots already exist:</p>
+                    <ul>
+                        <% existingTimeSlots.forEach(slot => { %>
+                            <li><%= slot %></li>
+                        <% }); %>
+                    </ul>
+                </div>
+            <% } %>
+        <% } %>
+
+        <% if (successmsg) { %>
+            <div class="alert-success" role="alert"><%= successmsg %></div>
+        <% } %>
+        
+    </form>
+
+    <%- include('layouts/footer'); -%>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <%- include('layouts/scripts'); -%>
+    <script src="/js/appointment.js"></script>
+
+    <!-- <script>
+        $(document).ready(function() {
+            // Array to store selected time slots
+            let selectedTimeSlots = [];
+
+            $('#timeSlotsContainer').on('click', '.time-slot', function(event) {
+                event.preventDefault(); // Prevent form submission
+
+                var button = $(this);
+                var timeSlot = button.attr('id');
+
+                // Toggle selection state
+                if (button.hasClass('selected')) {
+                    // Remove from selectedTimeSlots
+                    selectedTimeSlots = selectedTimeSlots.filter(slot => slot !== timeSlot);
+                    button.removeClass('selected');
+                    button.prop('disabled', false); // Enable the button
+                } else {
+                    // Add to selectedTimeSlots
+                    selectedTimeSlots.push(timeSlot);
+                    button.addClass('selected');
+                    button.prop('disabled', true); // Disable the button
+                }
+
+                // Update hidden input value
+                $('#time').val(selectedTimeSlots.join(','));
+            });
+
+            $('#date').on('change', function() {
+                // Clear selected time slots and update buttons
+                selectedTimeSlots = [];
+                $('.time-slot').removeClass('selected').prop('disabled', false);
+                $('#time').val('');
+            });
+        });
+    </script> -->
+    
+</body>
+
+</html>

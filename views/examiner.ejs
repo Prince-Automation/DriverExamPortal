@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<%- include('layouts/header'); -%>
+
+<body>
+    <%- include('layouts/navbar'); -%>
+    <!-- Page Header-->
+    <header class="masthead">
+        <div class="container position-relative px-4 px-lg-5">
+            <div class="row gx-4 gx-lg-5 justify-content-center">
+                <div class="col-md-10 col-lg-8 col-xl-7">
+                    <div class="page-heading">
+                        <h1>EXAMINATION PAGE</h1>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content-->
+    <div class="container mt-4">
+        <h2>Appointments</h2>
+        <form action="/examiner" method="get">
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="filter" id="filterG2" value="G2">
+                <label class="form-check-label" for="filterG2">G2 Test</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="filter" id="filterG" value="G">
+                <label class="form-check-label" for="filterG">G Test</label>
+            </div>
+            <button type="submit" class="btn btn-primary">Filter</button>
+        </form>
+        
+        <div class="row">
+            <% appointments.forEach(appointment => { %>
+                <div class="col-md-4 mb-4">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="card-title examiner-card-title">Test Details</h5>
+                        </div>
+                        <div class="card-body">
+                            <p class="card-subtitle mb-2 text-muted">Name: <%= appointment.firstName %> <%= appointment.lastName %></p>
+                            <p class="card-text">Car Details: <%= appointment.make %> <%= appointment.model %> <%= appointment.year %></p>
+                            <p class="card-text">Type of Test: <%= appointment.type || 'N/A' %></p>
+                            <p class="card-text">Date of Test: <%= appointment.date %></p>
+                            <p class="card-text">Time of Test: <%= appointment.time %></p>
+                            <form action="/examiner/driver/<%= appointment.driverId %>" method="post">
+                                <div class="form-group">
+                                    <label for="comment">Comment</label>
+                                    <textarea class="form-control" id="comment" name="comment" rows="3"><%= appointment.comments %></textarea>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" id="pass" name="passFail" value="pass" <%= appointment.passfail === 'pass' ? 'checked' : '' %>>
+                                    <label class="form-check-label" for="pass">Pass</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" id="fail" name="passFail" value="fail" <%= appointment.passfail === 'fail' ? 'checked' : '' %>>
+                                    <label class="form-check-label" for="fail">Fail</label>
+                                </div>
+                                <button type="submit" class="btn btn-primary mt-2">Submit</button>
+                            </form>                            
+                        </div>
+                    </div>
+                </div>
+            <% }); %>
+        </div>
+        
+    </div>
+
+
+    <%- include('layouts/footer'); -%>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <%- include('layouts/scripts'); -%>
+</body>
+
+</html>

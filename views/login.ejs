@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+    
+    <%- include('layouts/header'); -%>
+
+    <body>
+        <%- include('layouts/navbar'); -%>
+        <!-- Page Header-->
+        <header class="masthead"> <!-- style="background-image: url('assets/img/contact-bg.jpg')"-->
+            <div class="container position-relative px-4 px-lg-5">
+                <div class="row gx-4 gx-lg-5 justify-content-center">
+                    <div class="col-md-10 col-lg-8 col-xl-7">
+                        <div class="page-heading">
+                            <h1>LOGIN</h1>
+                            <span class="subheading">Enter your credentials</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+        <!-- Main Content-->
+        <div class="gpage_container">
+            <div class="row justify-content-center">
+                <div class="col-lg-8 col-xl-6">
+                    <div id="loginForm">
+                        <h2 class="LoginSignUpHeader">Login</h2>
+                        <form action="/loginform" method="POST">
+                            <div class="mb-3">
+                                <label for="loginUsername" class="form-label">Username</label>
+                                <input type="text" id="loginUsername" name="loginUsername" class="form-control" >
+                            </div>
+                            <div class="mb-3">
+                                <label for="loginPassword" class="form-label">Password</label>
+                                <input type="password" id="loginPassword" name="loginPassword" class="form-control" >
+                            </div>
+                            <button type="submit" class="gpage_submit-button">Login</button>
+                        </form>
+                        <% if (error) { %>
+                            <div class="alert alert-danger" role="alert">
+                                <%= error %>
+                            </div>
+                        <% } %>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+        <%- include('layouts/footer'); -%>
+        
+        <%- include('layouts/scripts'); -%>
+
+        <!-- <script>
+            function toggleForm(formId) {
+                document.getElementById('signupForm').style.display = 'none';
+                document.getElementById('loginForm').style.display = 'none';
+                document.getElementById(formId).style.display = 'block';
+            }
+        </script> -->
+
+    </body>
+</html>

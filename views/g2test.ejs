@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <%- include('layouts/header'); -%>
+    <body>
+        <%- include('layouts/navbar'); -%>
+        <!-- Page Header-->
+        <header class="masthead">
+            <div class="container position-relative px-4 px-lg-5">
+                <div class="row gx-4 gx-lg-5 justify-content-center">
+                    <div class="col-md-10 col-lg-8 col-xl-7">
+                        <div class="page-heading">
+                            <h1>G2 Page</h1>                           
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+        <!-- Form Content-->
+        <form id="g2Form" class="booking-form" action="/g2/store" method="POST"> <!--action and method required to pass form data from the browser to our Node.js app-->
+            <!-- Personal Information Section -->
+            <fieldset class="form-section">
+                <legend class="section-title">Personal Information</legend>
+                <label for="firstName">First Name: *</label>
+                <input type="text" id="firstName" name="firstName" class="form-input" value="<%= result === true ? '' : user.firstName %>" required>
+    
+                <label for="lastName">Last Name: *</label>
+                <input type="text" id="lastName" name="lastName" class="form-input" value="<%= result === true ? '' : user.lastName %>" required>
+    
+                <label for="licenseNumber">License Number (8 characters alphanumeric): *</label>
+                <input type="text" id="licenseNumber" name="licenseNumber" pattern="[A-Za-z0-9]{8}" class="form-input" value="<%= result === true ? '' : user.licenseNumber %>" title="Must be 8 characters (alphanumeric)" required>
+    
+                <label for="age">Age: *</label>
+                <input type="number" id="age" name="age" class="form-input" value="<%= result === true ? '' : user.age %>" required>
+    
+                <label for="dob">Date of Birth: *</label>
+                <input type="date" id="dob" name="dob" class="form-input" required>
+            </fieldset>
+    
+            <!-- Car Information Section -->
+            <fieldset class="form-section">
+                <legend class="section-title">Car Information</legend>
+                <label for="make">Make: *</label>
+                <input type="text" id="make" name="make" class="form-input" value="<%= result === true ? '' : user.car_details.make %>" required>
+    
+                <label for="model">Model: *</label>
+                <input type="text" id="model" name="model" class="form-input" value="<%= result === true ? '' : user.car_details.model %>" required>
+    
+                <label for="year">Year: *</label>
+                <input type="number" id="year" name="year" class="form-input" value="<%= result === true ? '' : user.car_details.year %>" required>
+    
+                <label for="plateNumber">Plate Number: *</label>
+                <input type="text" id="plateNumber" name="plateNumber" class="form-input" value="<%= result === true ? '' : user.car_details.plateNumber %>" required>
+            </fieldset>
+    
+            <!-- Submit Button -->
+            <button type="submit" class="submit-button">Submit Request</button>
+
+            <div style="margin-top: 20px;"></div>
+            <% if (user.passFail) { %>
+            <% const alertClass = user.passFail === 'pass' ? 'alert-success' : 'alert-danger'; %>
+            <div class="alert <%= alertClass %>" role="alert">
+                Exam Status: <%= user.passFail %><br>
+                Comments from Examiner: <%= user.comment %>
+            </div>
+            <% } %>
+        </form>
+
+        <form class="booking-form" action="/g2/appointmentform" method="GET">
+            <fieldset class="form-section">
+                <label for="date">Select a date:</label>
+                <input class="form-input" type="date" id="date" name="bookingdate" required>
+            </fieldset>
+    
+            <button type="submit" id="showSlotsButton" class="submit-button">Show Slots</button>
+            <% if (appointmentBookedByUser) { %>
+            <h2>Appointments booked by you:</h2>
+            <ul>
+                <% appointmentBookedByUser.forEach(appointment=> { %>
+                    <li>Date: <%= appointment.date %>, Time: <%= appointment.time %>
+                    </li>
+                    <% }); %>
+            </ul>
+            <% } %>
+        </form>
+
+        <% if (appointments) { %>
+            <form id="bookSlotsForm" class="booking-form" action="/g2/appointmentform/book" method="POST">
+                <fieldset class="form-section">
+                    <legend class="section-title">Available Time Slots</legend>
+                    <input type="hidden" id="time" name="time">
+                    <div id="timeSlotsContainer">
+                    <% appointments.sort((a, b)=> a.time.localeCompare(b.time)).forEach(appointment=> { %>
+                        <button class="time-slot btnstyle" id="<%= appointment.time %>" data-time="<%= appointment._id %>">
+                            <%= appointment.time %>
+                        </button>
+                        <% }) %>
+                    </div>
+                </fieldset>
+                <button type="submit" id="bookSlotsButton" class="submit-button">Book Slots</button>
+                <% if (successMsg) { %>
+                    <div class="alert alert-success" role="alert">
+                        <%= successMsg %>
+                    </div>
+                <% } %>
+            </form>
+        <% } %>
+        
+        <!-- <form class="booking-form" action="/g2/appointmentform" method="GET">
+            <fieldset class="form-section">
+                <label for="date">Select a date:</label>
+                <input class="form-input" type="date" id="date" name="bookingdate" required>
+            </fieldset>
+            
+            <button type="submit" id="showSlotsButton" class="submit-button">Show Slots</button>
+        </form>
+
+            <% if (appointments) { %>
+            <form class="booking-form" action="/g2/appointmentform/book" method="POST"></form>
+            <legend class="section-title">Available Time Slots</legend>
+            <input type="hidden" id="time" name="time">
+            <fieldset class="form-section">
+                <% appointments.sort((a, b) => a.time.localeCompare(b.time)).forEach(appointment=> { %>
+                    <button class="time-slot btnstyle" id="<%= appointment._id %>" data-time="<%= appointment._id %>">
+                        <%= appointment.time %>
+                    </button>
+            
+                    <% }) %>
+            </fieldset>
+            <button type="submit" id="bookSlotsButton" class="submit-button">Book Slots</button>
+        </form>
+            <% } %> -->
+        
+        
+        
+        <%- include('layouts/footer'); -%>
+        <%- include('layouts/scripts'); -%>
+        <!-- <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                const showSlotsButton = document.getElementById('showSlotsButton');
+                const bookSlotsButton = document.getElementById('bookSlotsButton');
+                const appointmentForm = document.getElementById('appointmentForm');
+
+
+                bookSlotsButton.addEventListener('click', function () {
+                    appointmentForm.submit();
+                });
+            });
+        </script> -->
+
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                const showSlotsButton = document.getElementById('showSlotsButton');
+                const bookSlotsButton = document.getElementById('bookSlotsButton');
+                const timeInput = document.getElementById('time');
+                const urlParams = new URLSearchParams(window.location.search);
+                const bookingdate = urlParams.get('bookingdate');
+        
+                const timeSlots = document.querySelectorAll('.time-slot');
+                timeSlots.forEach(slot => {
+                    slot.addEventListener('click', function (event) {
+                        event.preventDefault(); // Prevent the default behavior
+
+                        // Remove the 'selected' class from all slots
+                        timeSlots.forEach(slot => {
+                            slot.classList.remove('selected');
+                        });
+
+                        // Add the 'selected' class to the clicked slot
+                        this.classList.add('selected');
+        
+                        // Update the hidden input field with the selected time slot appointment_id
+                        timeInput.value = this.getAttribute('data-time');
+                    });
+                });
+
+                
+                if (bookingdate) {
+                    document.getElementById('date').value = bookingdate;
+                }
+            });
+        </script>
+    </body>
+</html>

@@ -1,0 +1,17 @@
+'use strict';
+
+const UserModel = require('../models/UserModel');
+
+module.exports = async (req, res, next) => {
+    try{
+    const user = await UserModel.findById(req.session.userId);
+    if (!user) 
+    return res.redirect("/"); // for temp im redirecting to signup or dashboard
+    
+    next();
+}
+catch (err){
+    console.log("error seen in auth middleware: ",err);
+    res.redirect("/");  // for temp im redirecting to signup or dashboard
+}
+};

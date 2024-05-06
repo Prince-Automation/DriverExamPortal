@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+    <%- include('layouts/header'); -%>
+    <body>
+        <%- include('layouts/navbar'); -%>
+        <!-- Page Header-->
+        <header class="masthead">
+            <div class="container position-relative px-4 px-lg-5">
+                <div class="row gx-4 gx-lg-5 justify-content-center">
+                    <div class="col-md-10 col-lg-8 col-xl-7">
+                        <div class="page-heading">
+                            <h1>G Test Page</h1>
+                            <span class="subheading">This is what I do.</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+        <!-- Main Content-->
+        <div class="gpage_container">
+            <h2 class="gpage_page-title">G Page</h2>
+            <!-- <form id="gForm" class="booking-form" action="/gtestform" method="GET">
+                <label for="licenseNumber">Enter License Number:</label>
+                <input type="text" id="licenseNumber" name="licenseNumber" class="gpage_form-input" required>
+        
+                
+                <button type="submit" id="submitBtn" class="gpage_submit-button">Submit</button>
+            </form> -->
+            <!-- Display Data Section (hidden by default) -->
+            <div id="dataDisplay" class="gpage_data-display">
+                <!-- Displayed data will go here (for demonstration purposes) -->
+                <p id="displayedData" class="gpage_displayed-data">Data will be displayed here.</p>
+        
+                <% if (typeof message !=='undefined' ) { %>
+                    <p>
+                        <%= message %>
+                    </p>
+                    <% } %>
+                        <% if (typeof usermodel !=='undefined' ) { %>
+                            <table class="gpage_data-table">
+                                <tbody>
+                                    <tr>
+                                        <th>First Name</th>
+                                        <td>
+                                            <%= usermodel.firstName %>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>Last Name</th>
+                                        <td>
+                                            <%= usermodel.lastName %>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>License Number</th>
+                                        <td>
+                                            <%= usermodel.licenseNumber %>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>Age</th>
+                                        <td>
+                                            <%= usermodel.age %>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </br>
+                            <h3>Car Information</h3>
+                            <form id="gCarForm" class="booking-form" action="/gtest/carDetails" method="POST">
+                                <input type="hidden" name="licenseNumber" value="<%= usermodel.licenseNumber %>">
+                                <label for="make">Make:</label>
+                                <input type="text" id="make" name="make" value="<%= usermodel.car_details.make %>" class="form-input"
+                                    required>
+
+                                <label for="model">Model:</label>
+                                <input type="text" id="model" name="model"
+                                    value="<%= usermodel.car_details.model %>" class="form-input" required>
+
+                                <label for="year">Year:</label>
+                                <input type="number" name="year" value="<%= usermodel.car_details.year %>" class="form-input"
+                                    required>
+
+                                <label for="plateNumber">Plate Number:</label>
+                                <input type="text" id="plateNumber" name="plateNumber"
+                                    value="<%= usermodel.car_details.plateNumber %>" class="form-input" required>
+
+                                <button class="submit-button" type="submit">Update</button>
+                                
+                                <div style="margin-top: 20px;"></div>
+                                <% if (usermodel.passFail) { %>
+                                <% const alertClass = usermodel.passFail === 'pass' ? 'alert-success' : 'alert-danger'; %>
+                                <div class="alert <%= alertClass %>" role="alert">
+                                    Exam Status: <%= usermodel.passFail %><br>
+                                    Comments from Examiner: <%= usermodel.comment %>
+                                </div>
+                                <% } %>
+                            </form>
+
+                        <% } %>
+            </div>
+        </div>
+
+        <%- include('layouts/footer'); -%>
+        
+        <%- include('layouts/scripts'); -%>
+    </body>
+</html>
